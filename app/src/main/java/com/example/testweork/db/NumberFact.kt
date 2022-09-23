@@ -10,5 +10,6 @@ import kotlinx.parcelize.Parcelize
  class NumberFact(
     @PrimaryKey
     val id: Int = 0,
+
     val fact: String
 ):Parcelable

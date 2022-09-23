@@ -20,6 +20,7 @@ class RvAdapter(var list: MutableList<NumberFact>): RecyclerView.Adapter<RvAdapt
 
     override fun onBindViewHolder(holder: NumberViewHolder, position: Int) {
         var numberFact = list[position]
+
        holder.binding.cl.setOnClickListener {
            var context = holder.binding.cl.context
            var intent = Intent(context, MainActivity2::class.java)
@@ -29,12 +30,15 @@ class RvAdapter(var list: MutableList<NumberFact>): RecyclerView.Adapter<RvAdapt
         holder.binding.textViewText.text = numberFact.fact
     }
 
+
     override fun getItemCount(): Int {
         return list.size
     }
     fun updateList(list:List<NumberFact>) {
         this.list.clear()
         this.list.addAll(list)
+
+
         notifyDataSetChanged()
     }
 }

@@ -4,10 +4,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
-import androidx.activity.result.contract.ActivityResultContracts
 import com.example.testweork.databinding.ActivityMain2Binding
-import com.example.testweork.databinding.ActivityMainBinding
 import com.example.testweork.db.NumberFact
 
 class MainActivity2 : AppCompatActivity() {

@@ -9,7 +9,7 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "number_facts")
  class NumberFact(
     @PrimaryKey
-    val id: Int = 0,
+    val id: Int =0,
 
     val fact: String
 ):Parcelable

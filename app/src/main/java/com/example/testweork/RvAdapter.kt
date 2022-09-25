@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testweork.databinding.ItemNumberBinding
+
 import com.example.testweork.db.NumberFact
 
 class RvAdapter(var list: MutableList<NumberFact>): RecyclerView.Adapter<RvAdapter.NumberViewHolder>() {
@@ -26,7 +27,7 @@ class RvAdapter(var list: MutableList<NumberFact>): RecyclerView.Adapter<RvAdapt
            intent.putExtra("numberFact",numberFact)
            context.startActivity(intent)
        }
-        holder.binding.textViewText.text = numberFact.fact
+        holder.binding.textViewText.text = numberFact.fact.substring(0,30) + "..."
     }
 
 

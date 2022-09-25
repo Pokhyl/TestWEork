@@ -26,19 +26,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val handler = CoroutineExceptionHandler {
-                context, exception -> println("Error ${exception.message}")
-        }
-        var daoNumberFact = DbHelper.getDaoDataBase(this).getDaoNumberFacts()
+//        val handler = CoroutineExceptionHandler {
+//                context, exception -> println("Error ${exception.message}")
+//        }
+        val daoNumberFact = DbHelper.getDaoDataBase(this).getDaoNumberFacts()
         val numbersApi = ApiHelper.getInstance()
         val repository = NumberFactRepository(numbersApi, daoNumberFact)
         val mainViewModelFactory  = MainViewModelFactory(repository)
         val mainViewModel: MainViewModel = ViewModelProvider(this, mainViewModelFactory).get(MainViewModel::class.java)
-
-        var adapter = RvAdapter(mutableListOf())
-
+        val adapter = RvAdapter(mutableListOf())
         binding.rvNumberFact.adapter = adapter
-
         binding.rvNumberFact.layoutManager = LinearLayoutManager(this)
 
         mainViewModel.listLiveData.observe(this){
@@ -47,17 +44,20 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.getNumberFactsDb()
 
         mainViewModel.numberFact.observe(this){
-            
+
             Toast.makeText(this,it, Toast.LENGTH_LONG).show()
         }
         binding.buttonFact.setOnClickListener {
+            adapter.notifyDataSetChanged()
+
+
 
             var number: Int = if (binding.editTextNumber.text.toString().isNullOrEmpty()) {
                 0
             } else {
                 binding.editTextNumber.text.toString().toInt()
             }
-           mainViewModel.getNumberFactApi(number)
+            mainViewModel.getNumberFactApi(number)
             mainViewModel.getNumberFactsDb()
 
             val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -65,8 +65,10 @@ class MainActivity : AppCompatActivity() {
         }
         binding.buttonRandomFact.setOnClickListener {
 
+
             mainViewModel.getRandomNumberFact()
             mainViewModel.getNumberFactsDb()
+
         }
 
 

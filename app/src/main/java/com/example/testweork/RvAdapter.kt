@@ -27,7 +27,7 @@ class RvAdapter(private var list: MutableList<NumberFact>): RecyclerView.Adapter
            intent.putExtra("numberFact",numberFact)
            context.startActivity(intent)
        }
-        if (numberFact.fact.length>=30) {
+        if (numberFact.fact.length > 30) {
             val splitString = numberFact.fact.substring(0, 30) + "..."
             holder.binding.textViewText.text = splitString
         } else{

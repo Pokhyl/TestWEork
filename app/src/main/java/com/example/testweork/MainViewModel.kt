@@ -1,5 +1,6 @@
 package com.example.testweork
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.testweork.db.NumberFact
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class MainViewModel(val numberFactRepository: NumberFactRepository): ViewModel() {
@@ -26,19 +28,25 @@ class MainViewModel(val numberFactRepository: NumberFactRepository): ViewModel()
 
    }
     fun getNumberFactApi(number:Int) {
-        viewModelScope.launch(Dispatchers.Main + handler) {
-        var response = numberFactRepository.getNumberFactApi(number)
-            if (response.isSuccessful) {
+        viewModelScope.launch {
+            var job: Job = viewModelScope.launch(Dispatchers.Main + handler) {
+                var response = numberFactRepository.getNumberFactApi(number)
+                if (response.isSuccessful) {
 
 
-                val numberFactStr: String =response.body()?:""
-                numberFact.value=numberFactStr
-                numberFactRepository.createNumberFact(NumberFact(number, numberFactStr))
+                    val numberFactStr: String = response.body() ?: ""
+                    numberFact.value = numberFactStr
+                    numberFactRepository.createNumberFact(NumberFact(number, numberFactStr))
 
 
-            }else{
-                numberFact.value="Error"
+                } else {
+                    numberFact.value = "Error"
+                }
+
             }
+            job.join()
+            getNumberFactsDb()
+        }
     }
     fun createNumberFact(numberFact: NumberFact) {
         viewModelScope.launch {
@@ -46,23 +54,28 @@ class MainViewModel(val numberFactRepository: NumberFactRepository): ViewModel()
         }
     }
 
-    }
+
+     @SuppressLint("SuspiciousIndentation")
      fun getRandomNumberFact() {
-         viewModelScope.launch(Dispatchers.Main + handler) {
-           var response  =  numberFactRepository.getRandomNumberFact()
-             if (response.isSuccessful) {
-                 if (!response.body().isNullOrEmpty()) {
+         viewModelScope.launch {
+            var job:Job =   viewModelScope.launch(Dispatchers.Main + handler) {
+                 var response = numberFactRepository.getRandomNumberFact()
+                 if (response.isSuccessful) {
+                     if (!response.body().isNullOrEmpty()) {
+                         var s: Int = ((response.body() ?: "0").split(" ")[0]).toInt()
+//                     var fact = response.body()?:"0"
+//                     var factSplit: String = fact.split(" ")[0]
+//                     var id = factSplit.toInt()
+                         numberFact.value = response.body() ?: ""
+                         numberFactRepository.createNumberFact(NumberFact(s, response.body() ?: ""))
 
-                     var fact = response.body()?:"0"
-                     var factSplit: String = fact.split(" ")[0]
-                     var id = factSplit.toInt()
-                     numberFact.value = fact
-                     numberFactRepository.createNumberFact(NumberFact(id, fact))
-
-                 } else {
-                     numberFact.value = "Error"
+                     } else {
+                         numberFact.value = "Error"
+                     }
                  }
              }
+             job.join()
+             getNumberFactsDb()
          }
      }
 }

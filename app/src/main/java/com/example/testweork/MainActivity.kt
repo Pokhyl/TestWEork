@@ -48,17 +48,15 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this,it, Toast.LENGTH_LONG).show()
         }
         binding.buttonFact.setOnClickListener {
-            adapter.notifyDataSetChanged()
-
-
 
             var number: Int = if (binding.editTextNumber.text.toString().isNullOrEmpty()) {
                 0
             } else {
                 binding.editTextNumber.text.toString().toInt()
             }
-            mainViewModel.getNumberFactApi(number)
-            mainViewModel.getNumberFactsDb()
+           mainViewModel.getNumberFactApi(number)
+
+
 
             val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(binding.editTextNumber.windowToken, 0)
@@ -67,7 +65,7 @@ class MainActivity : AppCompatActivity() {
 
 
             mainViewModel.getRandomNumberFact()
-            mainViewModel.getNumberFactsDb()
+
 
         }
 
